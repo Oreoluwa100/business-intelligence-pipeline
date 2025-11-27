@@ -8,16 +8,16 @@ def generate_subscriptions(users):
     subscriptions = []
     
     plan_details = {
-        'free': {'price': 0, 'features': 'basic_analytics'},
-        'basic': {'price': 29, 'features': 'standard_analytics'},
-        'premium': {'price': 99, 'features': 'advanced_analytics'},
-        'enterprise': {'price': 299, 'features': 'custom_analytics'}
+        "free": {"price": 0, "features": "basic_analytics"},
+        "basic": {"price": 29, "features": "standard_analytics"},
+        "premium": {"price": 99, "features": "advanced_analytics"},
+        "enterprise": {"price": 299, "features": "custom_analytics"}
     }
     
     for user in users:
-        user_id = user['user_id']
-        current_plan = user['initial_plan']
-        signup_date = user['signup_date']
+        user_id = user["user_id"]
+        current_plan = user["initial_plan"]
+        signup_date = user["signup_date"]
         
         # Initial subscription
         subscriptions.append({
@@ -26,7 +26,7 @@ def generate_subscriptions(users):
             "plan_type": current_plan,
             "start_date": signup_date,
             "end_date": None,
-            "price": plan_details[current_plan]['price'],
+            "price": plan_details[current_plan]["price"],
             "status": "active"
         })
         
@@ -43,11 +43,11 @@ def generate_subscriptions(users):
         # User changes plan
         days_after_signup = random.randint(30, days_since_signup)
         change_date = signup_date + timedelta(days = days_after_signup)
-        new_plan = random.choice(['free', 'basic', 'premium', 'enterprise'])
+        new_plan = random.choice(["free", "basic", "premium", "enterprise"])
         
         # End previous subscription
-        subscriptions[-1]['end_date'] = change_date
-        subscriptions[-1]['status'] = "ended"
+        subscriptions[-1]["end_date"] = change_date
+        subscriptions[-1]["status"] = "ended"
         
         # Start new subscription
         subscriptions.append({
@@ -56,7 +56,7 @@ def generate_subscriptions(users):
             "plan_type": new_plan,
             "start_date": change_date,
             "end_date": None,
-            "price": plan_details[new_plan]['price'],
+            "price": plan_details[new_plan]["price"],
             "status": "active"
         })
     

@@ -13,10 +13,10 @@ def generate_users(num_users = 800):
             "email": f"users{i}@company.com",
             "company_name": f"Company_{random.randint(1000, 9999)}",
             "signup_date": signup_date,
-            "initial_plan": random.choice(['free', 'basic', 'premium', 'enterprise']),
-            "country": random.choice(['US', 'UK', 'Canada', 'Germany', 'Australia']),
-            "industry": random.choice(['E-commerce', 'SaaS', 'Retail', 'Healthcare', 'Finance', 'Education']),
-            "employee_count": random.choice(['1-10', '11-50', '51-200', '201-500', '500+'])
+            "initial_plan": random.choice(["free", "basic", "premium", "enterprise"]),
+            "country": random.choice(["US", "UK", "Canada", "Germany", "Australia"]),
+            "industry": random.choice(["E-commerce", "SaaS", "Retail", "Healthcare", "Finance", "Education"]),
+            "employee_count": random.choice(["1-10", "11-50", "51-200", "201-500", "500+"])
         })
     
     return users
