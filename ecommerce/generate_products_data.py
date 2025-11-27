@@ -1,5 +1,6 @@
 import pandas as pd
-import numpy as mp
+import numpy as np
+
 def generate_products():
     products = [
         {"product_id": "LAP001", "product_name": "MacBook Pro 14-inch", "category": "Laptops", "price": 1999.99},
@@ -13,4 +14,3 @@ def generate_products():
     ]
     return products
 
-#print(pd.DataFrame(generate_products()))

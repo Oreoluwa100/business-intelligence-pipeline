@@ -62,7 +62,3 @@ def generate_subscriptions(users):
     
     return subscriptions
 
-#from generate_users_data import generate_users
-#users = generate_users(800)
-#sub = generate_subscriptions(users)
-#print(pd.DataFrame(sub))

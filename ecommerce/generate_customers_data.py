@@ -19,4 +19,4 @@ def generate_customers(num_customers = 1000):
         })
     return customers
 
-print(pd.DataFrame(generate_customers(1000)).iloc[0:5,:])
+

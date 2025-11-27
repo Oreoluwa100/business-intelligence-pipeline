@@ -49,10 +49,5 @@ def generate_orders(num_orders = 5000, customers = None, products = None):
         orders[-1]['total_amount'] = round(order_total, 2)
     
     return orders, order_items
-from generate_customers_data import generate_customers
-from generate_products_data import generate_products
 
-customers = generate_customers(1000)
-products = generate_products()
-orders, order_items = generate_orders(5000, customers, products)
-print(pd.DataFrame(order_items).loc[0:4,:])
+

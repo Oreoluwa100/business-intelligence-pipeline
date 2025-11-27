@@ -21,6 +21,5 @@ def generate_users(num_users = 800):
     
     return users
 
-#users = generate_users(800)
-#print(pd.DataFrame(users))
+
  
