@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 
 def generate_products():
+     # Product catalog for the e-commerce store
     products = [
         {"product_id": "LAP001", "product_name": "MacBook Pro 14-inch", "category": "Laptops", "price": 1999.99},
         {"product_id": "LAP002", "product_name": "Dell XPS 13", "category": "Laptops", "price": 1299.99},

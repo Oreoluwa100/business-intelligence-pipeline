@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import random
+import sys
+import os
 
 def generate_customer_user_link(customers, users, overlap_percentage = 0.6):
     """
@@ -33,3 +35,4 @@ def generate_customer_user_link(customers, users, overlap_percentage = 0.6):
         })
     
     return links
+
