@@ -14,6 +14,9 @@ def generate_subscriptions(users):
         "premium": {"price": 99, "features": "advanced_analytics"},  
         "enterprise": {"price": 299, "features": "custom_analytics"}  
     }
+
+    # All available plans
+    all_plans = ["free", "basic", "premium", "enterprise"]
     
     for user in users:
         user_id = user["user_id"]
@@ -43,7 +46,11 @@ def generate_subscriptions(users):
         
         days_after_signup = random.randint(30, days_since_signup)
         change_date = signup_date + timedelta(days = days_after_signup)  # Calculate change date
-        new_plan = random.choice(["free", "basic", "premium", "enterprise"])  # Random new plan
+
+        # Ensure new plan is different from current plan
+        current_plan = subscriptions[-1]["plan_type"]
+        available_plans = [plan for plan in all_plans if plan != current_plan]
+        new_plan = random.choice(available_plans)  # Only choose from different plans
         
         # End previous subscription on the change date
         subscriptions[-1]["end_date"] = change_date
