@@ -74,9 +74,8 @@ def load_to_neon():
     links = generate_customer_user_link(customers, users)
 
      # Create schemas and tables
-    cursor.execute("""CREATE SCHEMA IF NOT EXISTS ecommerce""")  # Ecommerce specific tables
+    cursor.execute("""CREATE SCHEMA IF NOT EXISTS ecommerce""")  # Ecommerce tables
     cursor.execute("""CREATE SCHEMA IF NOT EXISTS saas_platform""")  # SaaS platform tables
-    cursor.execute("""CREATE SCHEMA IF NOT EXISTS analytics""") # Analytics tables
 
     cnx.commit()
     print("Created schemas: ecommerce, saas_platform, analytics")
