@@ -1,0 +1,107 @@
+version: 2
+
+sources:
+  - name: ecommerce
+    database: neondb
+    schema: ecommerce
+    description: "E-commerce business data"
+    
+    tables:
+      - name: customers
+        description: "Raw customer data from e-commerce platform"
+        columns:
+          - name: customer_id
+            description: "Unique customer identifier"
+            tests:
+              - unique
+              - not_null
+          - name: signup_date
+            description: "Date customer signed up"
+            tests:
+              - not_null
+
+      - name: products
+        description: "Product details"
+        columns:
+          - name: product_id
+            tests:
+              - unique
+              - not_null
+          - name: price
+            tests:
+              - not_null
+
+      - name: orders
+        description: "Customer orders"
+        columns:
+          - name: order_id
+            tests:
+              - unique
+              - not_null
+          - name: customer_id
+            tests:
+              - not_null
+
+      - name: order_items
+        description: "Items ordered"
+        columns:
+          - name: order_item_id
+            tests:
+              - unique
+              - not_null
+          - name: order_id
+            tests:
+              - not_null
+          - name: product_id
+            tests:
+              - not_null
+
+  - name: saas_platform
+    database: neondb
+    schema: saas_platform
+    description: "SaaS platform user and activity data"
+    
+    tables:
+      - name: users
+        description: "SaaS platform user accounts"
+        columns:
+          - name: user_id
+            tests:
+              - unique
+              - not_null
+
+      - name: subscriptions
+        description: "User subscription history"
+        columns:
+          - name: subscription_id
+            tests:
+              - unique
+              - not_null
+          - name: user_id
+            tests:
+              - not_null
+
+      - name: events
+        description: "User activities on SaaS platform"
+        columns:
+          - name: event_id
+            tests:
+              - unique
+              - not_null
+          - name: user_id
+            tests:
+              - not_null
+
+      - name: customer_user_link
+        description: "Links e-commerce customers to platform users"
+        columns:
+          - name: link_id
+            tests:
+              - unique
+              - not_null
+          - name: customer_id
+            tests:
+              - not_null
+          - name: user_id
+            tests:
+              - not_null
