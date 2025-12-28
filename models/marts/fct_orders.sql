@@ -3,7 +3,7 @@
         schema='marts',
         materialized='incremental',
         unique_key='order_id',
-        tags=['marts', 'ecommerce', 'fact', 'incremental']
+        tags=['marts', 'ecommerce', 'fact', 'incremental', 'orders', 'customers', 'products']
     )
 }}
 
@@ -44,10 +44,10 @@ order_enriched as (
         count(distinct p.category) as distinct_categories,
 
         case 
-            when extract(hour from o.order_timestamp) between 9 and 17 
-            then 'Business Hours'
-            else 'After Hours'
-        end as order_time_segment
+            when extract(hour from o.order_timestamp) between 9 and 17 then 'Business Hours'
+            when extract(hour from o.order_timestamp) between 18 and 23 then 'Evening'
+            else 'Night/Early Morning'
+            end as order_time_segment
 
     from orders o
     left join order_items oi on o.order_id = oi.order_id

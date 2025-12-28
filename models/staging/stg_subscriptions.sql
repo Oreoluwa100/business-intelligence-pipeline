@@ -2,7 +2,7 @@
     config(
         schema='staging',
         materialized='view',
-        tags=['staging', 'saas_platform']
+        tags=['staging', 'saas_platform', 'subscriptions']
     )
 }}
 
