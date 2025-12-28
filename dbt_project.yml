@@ -20,4 +20,9 @@ models:
     staging:
       materialized: view        
       schema: staging           
-    
+    marts:
+      materialized: table        
+      schema: marts 
+    analytics:
+      materialized: table
+      schema: analytics
