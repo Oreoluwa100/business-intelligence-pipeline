@@ -1,4 +1,4 @@
-# End-to-End Analytics Pipeline: E-commerce & SaaS Data
+# Modern Data Stack Analytics Pipeline: E-commerce & SaaS Data
 ## Project Overview
 This project demonstrates an end-to-end analytics pipeline that transforms raw e-commerce and SaaS data into an analytics-ready Kimball star schema. I simulated realistic business data, built a multi-layered dbt transformation pipeline, and deployed using dbt Cloud, all connected to a Neon PostgreSQL database.
 
