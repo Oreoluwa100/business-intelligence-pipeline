@@ -1,0 +1,153 @@
+version: 2
+
+models:
+  #Dimensions
+  - name: dim_customers
+    description: "Master dimension table for all e-commerce customers. Contains core customer attributes and derived fields for segmentation and time-based analysis."
+    columns:
+      - name: customer_id
+        description: "Primary key. Unique identifier for the customer, sourced from the raw data."
+      - name: email
+        description: "Customer's primary email address."
+      - name: signup_date
+        description: "Date when the customer first registered on the platform."
+      - name: country_code
+        description: "The ISO country code for the customer's location, standardized to uppercase."
+      - name: is_active_flag
+        description: "Boolean flag (TRUE/FALSE) indicating whether the customer account is currently active. Essential for filtering active customer analyses."
+      - name: region_group
+        description: "Business-level regional grouping derived from country (e.g., 'English-Speaking', 'DACH')."
+      - name: data_quality_flag
+        description: "Indicates the result of initial data validation checks on the customer record."
+      - name: days_since_signup
+        description: "Calculated field showing the customer's tenure in days. Crucial for cohort and lifetime value analysis."
+
+  - name: dim_products
+    description: "Dimension table containing all products available in the e-commerce catalog, including categorization for analysis."
+    columns:
+      - name: product_id
+        description: "Primary key. Unique identifier for the product (e.g., 'LAP001')."
+      - name: product_name
+        description: "Descriptive name of the product."
+      - name: category
+        description: "Product category (e.g., 'Laptops', 'Phones')."
+      - name: price
+        description: "The current list price of the product."
+      - name: product_family
+        description: "Higher-level grouping of categories for simplified reporting (e.g., 'Mobile' for Phones & Tablets)."
+
+  - name: dim_users
+    description: "Master dimension table for users of the SaaS platform. Contains company and demographic information for B2B analysis."
+    columns:
+      - name: user_id
+        description: "Primary key. Unique identifier for the SaaS platform user."
+      - name: company_name
+        description: "The name of the company the user belongs to."
+      - name: initial_plan
+        description: "The subscription plan the user started with upon signup."
+      - name: industry
+        description: "The industry sector of the user's company (e.g., 'Healthcare', 'Finance')."
+      - name: employee_count
+        description: "Raw employee count bracket (e.g., '1-10', '500+')."
+      - name: company_size_category
+        description: "Derived classification from employee_count, such as 'Small Business' or 'Enterprise', for standardized reporting."
+
+  #Facts
+  - name: fct_orders
+    description: "Grain: One record per validated order. Core fact table tracking all e-commerce transactions, enriched with customer, product, and temporal attributes for sales analysis."
+    config:
+      materialized: incremental
+    columns:
+      - name: order_id
+        description: "Primary key. Unique identifier for the order."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Foreign key to `dim_customers`. Identifies the customer who placed the order."
+      - name: order_date
+        description: "Date of the order. Partition key for incremental loading."
+      - name: order_status
+        description: "Current status of the order (e.g., 'delivered', 'processing')."
+      - name: order_size
+        description: "Business classification of the order based on total amount (e.g., 'Small Order', 'Large Order')."
+      - name: customer_country
+        description: "Customer's country at the time of order, copied from `dim_customers`."
+      - name: customer_active_status
+        description: "Whether the customer was active at the time of order, copied from `dim_customers`."
+      - name: item_count
+        description: "Count of distinct items (line items) in the order."
+      - name: total_quantity
+        description: "Sum of all product quantities purchased in the order."
+      - name: items_total
+        description: "Sum of `item_total` for all line items in the order."
+      - name: order_time_segment
+        description: "Time-based classification ('Business Hours', 'Evening', etc.) derived from `order_timestamp`."
+
+  - name: fct_events
+    description: "Grain: One record per platform interaction. Fact table capturing detailed user activity on the SaaS platform (logins, views, reports), enriched with user context."
+    config:
+      materialized: incremental
+    columns:
+      - name: event_id
+        description: "Primary key. Unique identifier for the event."
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "Foreign key to `dim_users`. Identifies the user who performed the event."
+      - name: event_type
+        description: "Specific type of user action (e.g., 'dashboard_view', 'report_generated')."
+      - name: event_category
+        description: "Logical grouping of event types (e.g., 'viewing', 'creation')."
+      - name: event_date
+        description: "Date of the event. Primary partition for incremental loading."
+      - name: event_hour
+        description: "Hour of the day when the event occurred, extracted from `event_timestamp`."
+      - name: platform
+        description: "Platform where the event originated ('web', 'mobile', 'api')."
+      - name: view_duration_seconds
+        description: "For view events, captures how long the user spent on a dashboard or page."
+      - name: time_of_day_segment
+        description: "Business classification of the event time ('Business Hours', 'Evening', etc.)."
+
+  - name: fct_subscriptions
+    description: "Grain: One record per subscription period. Fact table tracking the lifecycle of SaaS user subscriptions, including plan changes, revenue, and status."
+    columns:
+      - name: subscription_id
+        description: "Primary key. Unique identifier for the subscription record."
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "Foreign key to `dim_users`. Identifies the user who holds this subscription."
+      - name: plan_type
+        description: "Type of subscription plan (e.g., 'basic', 'enterprise')."
+      - name: start_date
+        description: "Date when this subscription period began."
+      - name: end_date
+        description: "Date when this subscription period ended. NULL for currently active subscriptions."
+      - name: status
+        description: "Current status of the subscription ('active', 'ended')."
+      - name: is_currently_active
+        description: "Boolean flag indicating if this is the user's active subscription as of the latest data."
+      - name: monthly_recurring_revenue
+        description: "Monthly Recurring Revenue (MRR) attributable to this subscription. 0.00 for inactive or free plans."
+
+  - name: fct_customer_user_link
+    description: "Grain: One record per validated link. Bridge fact table connecting e-commerce customers to SaaS platform users, enabling unified cross-domain analysis with a confidence score."
+    columns:
+      - name: link_id
+        description: "Primary key. Unique identifier for the link record."
+      - name: customer_id
+        description: "Foreign key to `dim_customers`. The linked e-commerce customer."
+      - name: user_id
+        description: "Foreign key to `dim_users`. The linked SaaS platform user."
+      - name: link_type
+        description: "Type of relationship inferred ('same_person', 'same_company', etc.)."
+      - name: confidence_score
+        description: "Numerical score (0-1) representing the certainty of this link being correct."
+      - name: confidence_level
+        description: "Categorical classification derived from the score ('High Confidence', 'Low Confidence')."
+      - name: link_validation_status
+        description: "Data quality status of the link record. This model filters for 'Valid Link' only."
