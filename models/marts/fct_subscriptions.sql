@@ -1,8 +1,7 @@
 {{
     config(
         schema='marts',
-        materialized='incremental',
-        unique_key='subscription_id',
+        materialized='table',
         tags=['marts', 'saas_platform', 'fact', 'incremental', 'subscriptions', 'users']
     )
 }}
@@ -36,6 +35,3 @@ select
 from subscriptions s
 left join users u on s.user_id = u.user_id
 
-{% if is_incremental() %}
-    where s.start_date > (select max(start_date) from {{ this }})
-{% endif %}

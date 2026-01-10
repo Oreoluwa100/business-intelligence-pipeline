@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: agg_customer_metrics
+    description: "Grain:       
+      This table provides a complete performance view for each e-commerce customer.
+      Combines core demographic information from `dim_customers` with lifetime behavioral metrics calculated from `fct_orders`.
+      This table is optimized for customer segmentation, cohort analysis, and customer lifetime value (CLV) reporting."
+
+  - name: agg_product_performance
+    description: "Grain: 
+      This table provides comprehensive sales and customer engagement metrics for every product in the catalog.
+      Enables analysis of best-sellers, slow-moving items, and product portfolio health."
+
+  - name: agg_user_engagement
+    description: "Grain:       
+      This table is a roll-up of SaaS platform activity. Tracks the volume and variety of user interactions (`fct_events`) at a daily level.
+      Optimized for building time-series dashboards on user adoption, daily active users (DAU), and feature usage trends."
+    config:
+      materialized: incremental
+
+  - name: agg_user_subscription
+    description: "Grain:  
+      This is a table showing the latest known subscription state for each SaaS platform user.
+      Provides a clean view by joining `dim_users` with the most recent record from `fct_subscriptions` for analysis of current plan distribution and upgrades/downgrades."
+   
